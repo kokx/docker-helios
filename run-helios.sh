@@ -2,20 +2,31 @@
 
 # Solution from https://docs.docker.com/config/containers/multi-service_container/
 
+# Start helios itself
 env \
     VOTER_UPLOAD_REL_PATH='voters/%Y/%m/%d' \
     python manage.py runserver 0.0.0.0:8000 &
 status=$?
 if [ $status -ne 0 ]; then
-  echo "Failed to start my_first_process: $status"
+  echo "Failed to start helios server: $status"
   exit $status
 fi
 
-# Start the second process
-python manage.py celeryd &
+# Start rabbitmq
+rabbitmq-server &
 status=$?
 if [ $status -ne 0 ]; then
-  echo "Failed to start my_second_process: $status"
+  echo "Failed to start rabbitmq: $status"
+  exit $status
+fi
+
+# Start the worker
+env C_FORCE_ROOT=1 \
+    CELERY_ACCEPT_CONTENT=pickle \
+        /usr/local/bin/celeryd &
+status=$?
+if [ $status -ne 0 ]; then
+  echo "Failed to start celery: $status"
   exit $status
 fi
 
@@ -26,9 +37,9 @@ fi
 # Otherwise it loops forever, waking up every 60 seconds
 
 while sleep 60; do
-  ps aux |grep my_first_process |grep -q -v grep
+  ps aux |grep python |grep -q -v grep
   PROCESS_1_STATUS=$?
-  ps aux |grep my_second_process |grep -q -v grep
+  ps aux |grep celery |grep -q -v grep
   PROCESS_2_STATUS=$?
   # If the greps above find anything, they exit with 0 status
   # If they are not both 0, then something is wrong

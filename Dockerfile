@@ -2,16 +2,19 @@ FROM debian:stable
 
 RUN apt-get update
 
-RUN apt-get install -y git python2.7 python-psycopg2 python-django rabbitmq-server python-pip
+RUN apt-get install -y git python2.7 python-psycopg2 python-django rabbitmq-server python-pip python-setuptools
 
 RUN git clone --recursive git://github.com/benadida/helios-server.git /helios
 
 WORKDIR /helios
 
-COPY run-helios.sh .
-COPY settings.py .
-
 RUN pip install -r requirements.txt
+RUN pip install -U setuptools
+RUN easy_install celery
+RUN easy_install django-celery
+
+COPY settings.py .
+COPY run-helios.sh .
 
 ENV DEBUG 0
 ENV SECRET_KEY ChangeMe
