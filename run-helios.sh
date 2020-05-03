@@ -21,9 +21,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # Start the worker
-env C_FORCE_ROOT=1 \
-    CELERY_ACCEPT_CONTENT=pickle \
-        /usr/local/bin/celeryd &
+celery -A helios worker -l info &
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start celery: $status"

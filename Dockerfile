@@ -9,9 +9,6 @@ RUN git clone --recursive git://github.com/benadida/helios-server.git /helios
 WORKDIR /helios
 
 RUN pip install -r requirements.txt
-RUN pip install -U setuptools
-RUN easy_install celery
-RUN easy_install django-celery
 
 COPY settings.py .
 COPY run-helios.sh .
