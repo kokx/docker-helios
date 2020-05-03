@@ -8,6 +8,9 @@ RUN git clone --recursive git://github.com/benadida/helios-server.git /helios
 
 WORKDIR /helios
 
+COPY run-helios.sh .
+COPY settings.py .
+
 RUN pip install -r requirements.txt
 
 ENV DEBUG 0
@@ -28,8 +31,5 @@ ENV DATABASE_URL postgres://
 
 EXPOSE 8000
 
-CMD env \
-    VOTER_UPLOAD_REL_PATH='voters/%Y/%m/%d' \
-    DATABASE_URL=${DATABASE_URL} \
-    python manage.py runserver 0.0.0.0:8000
+CMD sh ./run-helios.sh
 
