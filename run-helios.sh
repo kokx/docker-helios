@@ -21,7 +21,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # Start the worker
-celery -A helios worker -l info &
+celery -A helios worker -l info --serializer pickle &
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start celery: $status"
