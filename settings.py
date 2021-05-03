@@ -50,7 +50,7 @@ if get_from_env('DATABASE_URL', None):
 #    DATABASES['default']['CONN_MAX_AGE'] = '600'
 
     # require SSL
-    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+    #DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 print DATABASES
 print os.environ.keys()
 

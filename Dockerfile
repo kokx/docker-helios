@@ -4,7 +4,7 @@ RUN apt-get update
 
 RUN apt-get install -y git python2.7 python-psycopg2 python-django rabbitmq-server python-pip python-setuptools
 
-RUN git clone --recursive git://github.com/benadida/helios-server.git /helios
+RUN git clone --branch python-2 --recursive git://github.com/benadida/helios-server.git /helios
 
 WORKDIR /helios
 
